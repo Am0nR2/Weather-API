@@ -6,7 +6,14 @@ const main = document.getElementById("main")
 const sunrise= document.getElementById("sunrise")
 
 
-daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+let daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+function getDays(num){
+        const whichDayWeAreIn = daysOfWeek.slice(num-1)
+        daysOfWeek.unshift(whichDayWeAreIn)
+     
+}
+
+
 let weatherStuation = ""
 
 searchBtn.addEventListener("click", handleSearch)
@@ -52,9 +59,10 @@ function handleSearch(){
            
         .then(data => {
             
-       console.log(data)     
+       
        const date = new Date(data.current_weather.time)
        const hours = date.getHours()
+       
        let sunRiseSet =  "" 
        if(data.daily.sunrise){
 
@@ -87,6 +95,8 @@ function handleSearch(){
         `
         main.innerHTML += ` <section class="day-cards" id="day-cards">
         </section>`
+        getDays(date.getDay())
+        daysOfWeek = daysOfWeek.flat()
         for(let i = 1; i<7; i++){
             if(data.daily.sunrise){
 
@@ -156,3 +166,4 @@ function calculateWeatherStuation(number){
 // Full Link
 // https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&hourly=temperature_2m&daily=weathercode,temperature_2m_max,temperature_2m_min,apparent_temperature_max,apparent_temperature_min,sunrise,sunset,precipitation_sum,rain_sum&current_weather=true&timezone=Europe%2FMoscow
 
+// new Date(data.current_weather.time).getDay()
