@@ -113,6 +113,13 @@ img{
     justify-content: space-around;
     align-items: center;
 }
+.situation{
+    font-weight: bold;
+    color: blue;
+    display: flex;
+    justify-content: flex-end;
+    margin: -10px 0;
+}
 /* .temp{
     padding: 1em;
     display: flex;

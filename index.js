@@ -10,7 +10,6 @@ let daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Satur
 function getDays(num){
         const whichDayWeAreIn = daysOfWeek.slice(num-1)
         daysOfWeek.unshift(whichDayWeAreIn)
-     
 }
 
 
@@ -26,7 +25,8 @@ function handleSearch(){
         `
         const temp = document.getElementById("temp")
         temp.innerHTML = ""
-    const correctedSearchInput = searchInput.value.toLowerCase().split("").map(letter => {
+    searchInput.value = searchInput.value.trim()
+    var correctedSearchInput = searchInput.value.toLowerCase().split("").map(letter => {
         return letter === "ş" ? "s"
         : letter === "ç" ? "c"
         : letter === "ö" ? "o"
@@ -34,8 +34,8 @@ function handleSearch(){
         : letter === "ü" ? "u"
         : letter === "ı" ? "i"
         : letter
-    }).join("")
-  
+    }).join("").slice(0,10)
+        
     let latitude = ""
     let longitude = ""
     
@@ -58,7 +58,7 @@ function handleSearch(){
         .then(res=> res.json())
            
         .then(data => {
-            
+        console.log(data)
        
        const date = new Date(data.current_weather.time)
        const hours = date.getHours()
@@ -84,9 +84,11 @@ function handleSearch(){
         <div class="day">
 
             <div class="city-icon">
-                <h2>${searchInput.value}</h2>
-                <img src=${calculateWeatherStuation(data.current_weather.weathercode)} alt="Rainy Weather">  
+                <h2>${correctedSearchInput}</h2>
+                <img src=${calculateWeatherStuation(data.current_weather.weathercode).path} alt="Rainy Weather">  
+                
             </div>
+            <p class="situation">${calculateWeatherStuation(data.current_weather.weathercode).weather} </p>
             <h3>${data.current_weather.temperature}°</h3>
             <p> <span class="keys">Time:</span>Today, ${hours}:00</p>
             <p> <span class="keys">windSpeed:</span> ${data.current_weather.windspeed} kmh</p>
@@ -125,9 +127,15 @@ function handleSearch(){
             <div class="day">
 
             <div class="city-icon">
-                <h2>${searchInput.value}</h2>
-                <img src=${calculateWeatherStuation(data.daily.weathercode[i])} alt="Rainy Weather">  
-            </div>
+                <h2>${correctedSearchInput}</h2>
+                <img src=${calculateWeatherStuation(data.daily.weathercode[i]).path} alt="Rainy Weather">  
+                
+                </div>
+                
+               
+                <p class="situation">${calculateWeatherStuation(data.daily.weathercode[i]).weather} </p>
+              
+              
             <h3>${data.daily.apparent_temperature_max[i]}°</h3>
             <p> <span class="keys">Time:</span>${daysOfWeek[i]}, ${data.daily.time[i]}</p>
             <p> <span class="keys">windSpeed:</span> ${data.current_weather.windspeed} kmh</p>
@@ -147,19 +155,21 @@ const date = new Date("2023-06-02T23:00")
 
 function calculateWeatherStuation(number){
     if(number>= 0 && number<4 ){
-       return "./images/sun.png"
+       return {weather: "Sunny", path: "./images/sun.png"}
     } else if(number >= 45 && number <50){
-       return "./images/fog.png"
+       return {weather: "Foggy", path: "./images/fog.png"}
     } else if(number >50 && number <58){
-      return"./images/drizzle.png"
+      return {weather: "Drizzle", path: "./images/drizzle.png"}
     } else if(number >60 && number <70){
-       return "./images/rain.png"
+       return {weather: "Rainny", path: "./images/rain.png"}
     } else if(number >70 && number <79){
-       return "./images/snow.png"
+       return {weather: "Snowy", path: "./images/snow.png"}
     } else if(number >= 80 ){
-       return "./images/storm.png"
+       return {weather: "Heavy Rain", path: "./images/storm.png"}
     }
 }
+
+
 
 // temperature_2m_max,temperature_2m_min,
 // ,sunrise,sunset
